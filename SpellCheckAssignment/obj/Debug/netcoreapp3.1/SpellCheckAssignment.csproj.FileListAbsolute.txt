@@ -1,0 +1,14 @@
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\bin\Debug\netcoreapp3.1\SpellCheckAssignment.exe
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\bin\Debug\netcoreapp3.1\SpellCheckAssignment.deps.json
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\bin\Debug\netcoreapp3.1\SpellCheckAssignment.runtimeconfig.json
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\bin\Debug\netcoreapp3.1\SpellCheckAssignment.runtimeconfig.dev.json
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\bin\Debug\netcoreapp3.1\SpellCheckAssignment.dll
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\bin\Debug\netcoreapp3.1\SpellCheckAssignment.pdb
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.AssemblyInfoInputs.cache
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.AssemblyInfo.cs
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.csproj.CoreCompileInputs.cache
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.dll
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.pdb
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.genruntimeconfig.cache
+C:\Users\p.oh\source\repos\SpellCheckAssignment\SpellCheckAssignment\obj\Debug\netcoreapp3.1\SpellCheckAssignment.csproj.AssemblyReference.cache
