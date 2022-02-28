@@ -8,6 +8,9 @@ using System.Timers;
 using System.Text.RegularExpressions;
 class Program
 {
+
+    static Timer _timer;
+
     public static void Main(string[] args)
     {
         // Load data files into arrays
@@ -28,12 +31,11 @@ class Program
     {
         bool runner = true;
 
-
         while (runner)
         {
 
             // Print out array elements at index values from start to stop 
-            Console.WriteLine("<<<MENU >>> \n1. Spell Check a Word (linear) \n2. Spell Check A Word (binary) \n3. Spell Check Alice in Wonderland (linear) \n4. Spell Check Alice in Wonderland (binary) \n5. Exit");
+            Console.WriteLine("<<< MENU >>> \n1. Spell Check a Word (linear) \n2. Spell Check A Word (binary) \n3. Spell Check Alice in Wonderland (linear) \n4. Spell Check Alice in Wonderland (binary) \n5. Exit");
 
             string wordChecker = Console.ReadLine();
 
@@ -42,26 +44,36 @@ class Program
                 case "1":
                     Console.WriteLine("Check Which Word?");
                     string search = Console.ReadLine().ToLower();
+                    long startTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                     int gotPos = LinearSearchString(search, dictionary);
+                    long endTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
                     checkIfFound(gotPos, search);
+
+                    Console.WriteLine($"It took {endTimer - startTimer} miliseconds!");
                     break;
                 case "2":
                     Console.WriteLine("Check Which Word?");
                     search = Console.ReadLine().ToLower();
+
+                    startTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                     gotPos = BinarySearchString(search, dictionary);
+                    endTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
                     checkIfFound(gotPos, search);
+
+                    Console.WriteLine($"It took {endTimer - startTimer} miliseconds!");
+
                     break;
                 case "3":
                     Console.WriteLine("Check Which Word?");
                     search = Console.ReadLine().ToLower();
                     gotPos = LinearSearchString(search, aliceWords);
-                    checkIfFound(gotPos, search);
                     break;
                 case "4":
                     Console.WriteLine("Check Which Word?");
                     search = Console.ReadLine().ToLower();
                     gotPos = BinarySearchString(search, aliceWords);
-                    checkIfFound(gotPos, search);
                     break;
                 case "5":
                     Console.WriteLine("Exiting Function!");
@@ -124,11 +136,12 @@ class Program
         return -1;
     }
 
+
     static void checkIfFound(int gotPos, string search)
     {
         if (gotPos > -1)
         {
-            Console.WriteLine($"{search} was found!");
+            Console.WriteLine($"{search} was found at position {gotPos}!");
         }
         else
         {
