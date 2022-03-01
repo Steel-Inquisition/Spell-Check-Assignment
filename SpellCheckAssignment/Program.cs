@@ -4,12 +4,12 @@
 // 2: aliceWords: an array containing all of the words from "AliceInWonderland.txt"
 
 using System;
-using System.Timers;
+using System.Threading;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 class Program
 {
-
-    static Timer _timer;
+    private static System.Timers.Timer aTimer;
 
     public static void Main(string[] args)
     {
@@ -33,6 +33,7 @@ class Program
 
         while (runner)
         {
+            Stopwatch stopWatch = new Stopwatch();
 
             // Print out array elements at index values from start to stop 
             Console.WriteLine("<<< MENU >>> \n1. Spell Check a Word (linear) \n2. Spell Check A Word (binary) \n3. Spell Check Alice in Wonderland (linear) \n4. Spell Check Alice in Wonderland (binary) \n5. Exit");
@@ -44,31 +45,40 @@ class Program
                 case "1":
                     Console.WriteLine("Check Which Word?");
                     string search = Console.ReadLine().ToLower();
-                    long startTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+
                     int gotPos = LinearSearchString(search, dictionary);
-                    long endTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
+                    stopWatch.Start();
                     checkIfFound(gotPos, search);
+                    stopWatch.Stop();
 
-                    Console.WriteLine($"It took {endTimer - startTimer} miliseconds!");
+                    TimeSpan ts = stopWatch.Elapsed;
+
+                    Console.WriteLine(ts.ToString());
                     break;
                 case "2":
                     Console.WriteLine("Check Which Word?");
                     search = Console.ReadLine().ToLower();
 
-                    startTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
                     gotPos = BinarySearchString(search, dictionary);
-                    endTimer = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
+                    stopWatch.Start();
                     checkIfFound(gotPos, search);
+                    stopWatch.Stop();
 
-                    Console.WriteLine($"It took {endTimer - startTimer} miliseconds!");
+                    ts = stopWatch.Elapsed;
 
+                    Console.WriteLine(ts.ToString());
                     break;
-                case "3":
-                    Console.WriteLine("Check Which Word?");
-                    search = Console.ReadLine().ToLower();
-                    gotPos = LinearSearchString(search, aliceWords);
+                case "3":                    
+                    for (int i = 0; i < dictionary.Length; i++)
+                    {
+                        gotPos = LinearSearchString(dictionary[i], aliceWords);
+                    }
+
+
                     break;
                 case "4":
                     Console.WriteLine("Check Which Word?");
@@ -110,19 +120,19 @@ class Program
 
     static int BinarySearchString(string search, String[] words)
     {
-        double lowerIndex = 0;
-        double upperIndex = words.Length - 1;
+        int lowerIndex = 0;
+        int upperIndex = words.Length - 1;
 
         while (lowerIndex <= upperIndex)
         {
-            double middleIndex = Math.Floor((lowerIndex + upperIndex) / 2);
+            int middleIndex = (lowerIndex + upperIndex) / 2;
 
-            if (search == words[(int)middleIndex])
+            if (search == words[middleIndex])
             {
-                return (int)middleIndex;
+                return middleIndex;
 
             }
-            else if (words[(int)middleIndex].CompareTo(search) > 0)
+            else if (words[middleIndex].CompareTo(search) > 0)
             {
                 upperIndex = middleIndex - 1;
 
