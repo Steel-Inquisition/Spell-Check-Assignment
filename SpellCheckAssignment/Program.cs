@@ -72,18 +72,51 @@ class Program
 
                     Console.WriteLine(ts.ToString());
                     break;
-                case "3":                    
-                    for (int i = 0; i < dictionary.Length; i++)
+                case "3":
+
+                    stopWatch.Start();
+
+                    int notFound = 0;
+
+                    for (int i = 0; i < aliceWords.Length; i++)
                     {
-                        gotPos = LinearSearchString(dictionary[i], aliceWords);
+                        gotPos = LinearSearchString(aliceWords[i], dictionary);
+
+                        if (gotPos == -1)
+                        {
+                            notFound++;
+                        }
                     }
 
+                    stopWatch.Stop();
 
+                    ts = stopWatch.Elapsed;
+
+                    Console.WriteLine(ts.ToString());
+                    Console.WriteLine($"There are {notFound} words not found in the dictionary!");
                     break;
                 case "4":
-                    Console.WriteLine("Check Which Word?");
-                    search = Console.ReadLine().ToLower();
-                    gotPos = BinarySearchString(search, aliceWords);
+                    stopWatch.Start();
+
+                    notFound = 0;
+
+                    for (int i = 0; i < aliceWords.Length; i++)
+                    {
+                        gotPos = BinarySearchString(aliceWords[i], dictionary);
+
+                        if (gotPos == -1)
+                        {
+                            notFound++;
+                        }
+                    }
+
+                    stopWatch.Stop();
+
+                    ts = stopWatch.Elapsed;
+
+                    Console.WriteLine(ts.ToString());
+                    Console.WriteLine($"There are {notFound} words not found in the dictionary!");
+
                     break;
                 case "5":
                     Console.WriteLine("Exiting Function!");
@@ -158,6 +191,30 @@ class Program
             Console.WriteLine($"{search} was not found!");
         }
     }
+
+
+    static void wordChecker(String[] dictionary, Stopwatch stopWatch, Func<string, int> myMethodName)
+    {
+        Console.WriteLine("Check Which Word?");
+        string search = Console.ReadLine().ToLower();
+
+        int gotPos = LinearSearchString(search, dictionary);
+
+        stopWatch.Start();
+        checkIfFound(gotPos, search);
+        stopWatch.Stop();
+
+        TimeSpan ts = stopWatch.Elapsed;
+
+        Console.WriteLine(ts.ToString());
+    }
+
+
+
+
+    // https://stackoverflow.com/questions/2082615/pass-method-as-parameter-using-c-sharp
+
+
 }
 
 
