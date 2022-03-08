@@ -3,14 +3,15 @@
 // 1: dictionary: an array containing all of the words from "dictionary.txt"
 // 2: aliceWords: an array containing all of the words from "AliceInWonderland.txt"
 
+// Only thing I don't exactly like is using a dictionary like this, seems kind of inefficent but I can't figure anything else out. And the casting (int) was weird.
+
+
 using System;
-using System.Threading;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 class Program
 {
-    private static System.Timers.Timer aTimer;
-
     public static void Main(string[] args)
     {
         // Load data files into arrays
@@ -18,124 +19,60 @@ class Program
         String aliceText = System.IO.File.ReadAllText(@"data-files/AliceInWonderLand.txt");
         String[] aliceWords = Regex.Split(aliceText, @"\s+");
 
-        // Asking
-        printStringArray(dictionary, aliceWords);
-
-        /*
-        Console.WriteLine("***ALICE WORDS***");
-        printStringArray(aliceWords, 0, 50);
-        */
+        // Load the Actual Spell Check
+        startSpellCheck(dictionary, aliceWords);
     }
 
-    public static void printStringArray(String[] dictionary, String[] aliceWords)
+    public static void startSpellCheck(String[] dictionary, String[] aliceWords)
     {
+        // set up the loop
         bool runner = true;
+
+        // set up the functions that can be chosen
+        var searchSelector = new Dictionary<int, Delegate>();
+        searchSelector[0] = new Func<string, String[], int>(LinearSearchString);
+        searchSelector[1] = new Func<string, String[], int>(BinarySearchString);
+
 
         while (runner)
         {
             Stopwatch stopWatch = new Stopwatch();
 
-            // Print out array elements at index values from start to stop 
+            // Print out menu
             Console.WriteLine("<<< MENU >>> \n1. Spell Check a Word (linear) \n2. Spell Check A Word (binary) \n3. Spell Check Alice in Wonderland (linear) \n4. Spell Check Alice in Wonderland (binary) \n5. Exit");
 
+            // Check which part of the menu is chosen
             string wordChecker = Console.ReadLine();
 
             switch (wordChecker)
             {
                 case "1":
-                    Console.WriteLine("Check Which Word?");
-                    string search = Console.ReadLine().ToLower();
-
-
-                    int gotPos = LinearSearchString(search, dictionary);
-
-                    stopWatch.Start();
-                    checkIfFound(gotPos, search);
-                    stopWatch.Stop();
-
-                    TimeSpan ts = stopWatch.Elapsed;
-
-                    Console.WriteLine(ts.ToString());
+                    // Linear Dictionary Search
+                    findWordByType(dictionary, stopWatch, searchSelector, 0);
                     break;
                 case "2":
-                    Console.WriteLine("Check Which Word?");
-                    search = Console.ReadLine().ToLower();
-
-
-                    gotPos = BinarySearchString(search, dictionary);
-
-                    stopWatch.Start();
-                    checkIfFound(gotPos, search);
-                    stopWatch.Stop();
-
-                    ts = stopWatch.Elapsed;
-
-                    Console.WriteLine(ts.ToString());
+                    // Binary Dictionary Search
+                    findWordByType(dictionary, stopWatch, searchSelector, 1);
                     break;
                 case "3":
-
-                    stopWatch.Start();
-
-                    int notFound = 0;
-
-                    for (int i = 0; i < aliceWords.Length; i++)
-                    {
-                        gotPos = LinearSearchString(aliceWords[i], dictionary);
-
-                        if (gotPos == -1)
-                        {
-                            notFound++;
-                        }
-                    }
-
-                    stopWatch.Stop();
-
-                    ts = stopWatch.Elapsed;
-
-                    Console.WriteLine(ts.ToString());
-                    Console.WriteLine($"There are {notFound} words not found in the dictionary!");
+                    // Linear Alice Words Search
+                    searchAliceWordByType(dictionary, aliceWords, stopWatch, searchSelector, 0);
                     break;
                 case "4":
-                    stopWatch.Start();
-
-                    notFound = 0;
-
-                    for (int i = 0; i < aliceWords.Length; i++)
-                    {
-                        gotPos = BinarySearchString(aliceWords[i], dictionary);
-
-                        if (gotPos == -1)
-                        {
-                            notFound++;
-                        }
-                    }
-
-                    stopWatch.Stop();
-
-                    ts = stopWatch.Elapsed;
-
-                    Console.WriteLine(ts.ToString());
-                    Console.WriteLine($"There are {notFound} words not found in the dictionary!");
-
+                    // Binary Alice Words Search
+                    searchAliceWordByType(dictionary, aliceWords, stopWatch, searchSelector, 1);
                     break;
                 case "5":
+                    // Exit Function
                     Console.WriteLine("Exiting Function!");
                     runner = false;
                     break;
                 default:
+                    // If user types soemthing wrong
                     Console.WriteLine("Wrong Inputed");
                     break;
             }
         }
-
-
-
-        /*
-        for (int i = start; i < stop; i++)
-        {
-            Console.WriteLine(array[i]);
-        }
-        */
     }
 
     static int LinearSearchString(string search, String[] strings)
@@ -193,28 +130,67 @@ class Program
     }
 
 
-    static void wordChecker(String[] dictionary, Stopwatch stopWatch, Func<string, int> myMethodName)
+    static void findWordByType(String[] dictionary, Stopwatch stopWatch, Dictionary<int, Delegate> searchSelector, int selectSearchType)
     {
+
+        // Get Input
         Console.WriteLine("Check Which Word?");
         string search = Console.ReadLine().ToLower();
 
-        int gotPos = LinearSearchString(search, dictionary);
-
+        // Start Timer
         stopWatch.Start();
-        checkIfFound(gotPos, search);
+
+        // Get Position of the input in the dictionary and check if it was found
+        // I don't like how I have to cast it as an (int)
+        var gotPos = searchSelector[selectSearchType].DynamicInvoke(search, dictionary);
+        checkIfFound((int)gotPos, search);
+
+        // Stop Timer
         stopWatch.Stop();
 
+        // Get time elapsed from starting timer to ending it
         TimeSpan ts = stopWatch.Elapsed;
 
-        Console.WriteLine(ts.ToString());
+        // Output how long it took
+        Console.WriteLine(ts.ToString() + " time it took!");
     }
 
+    static void searchAliceWordByType(String[] dictionary, String[] aliceWords, Stopwatch stopWatch, Dictionary<int, Delegate> searchSelector, int selectSearchType)
+    {
+        // Set up variable of how much not found
+        int notFound = 0;
 
+        // Start Timer
+        stopWatch.Start();
 
+        // Check every word in alice words
+        for (int i = 0; i < aliceWords.Length; i++)
+        {
 
-    // https://stackoverflow.com/questions/2082615/pass-method-as-parameter-using-c-sharp
+            // Get the position (of it doesn't exist) of the word in Alice Words
+            var gotPos = searchSelector[selectSearchType].DynamicInvoke(aliceWords[i], dictionary);
 
+            // if the word doesn't exist, add not found by one
+            // I don't like how I have to cast the variable to an (int) like this
+            if ((int)gotPos == -1)
+            {
+                notFound++;
+            }
+        }
 
+        // Stop Timer
+        stopWatch.Stop();
+
+        // Get time elapsed from starting timer to ending it
+        TimeSpan ts = stopWatch.Elapsed;
+
+        // Output how long it took and how many words were not found
+        Console.WriteLine(ts.ToString() + " time it took!");
+        Console.WriteLine($"There are {notFound} words not found in the dictionary!");
+    }
+
+    // This is what inspired me the most:
+    // https://stackoverflow.com/questions/4233536/c-sharp-store-functions-in-a-dictionary
 }
 
 
